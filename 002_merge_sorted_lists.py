@@ -3,7 +3,7 @@ import redis
 from algoredis_utils import *
 
 
-def merge_sorted_lists(list_keys: list[str], output_key: str):
+def merge_sorted_lists(list_keys: list[str]):
   """Merge the sorted lists whose keys are given.
 
   You are given several keys pointing to sorted lists in Redis:
@@ -19,11 +19,13 @@ def merge_sorted_lists(list_keys: list[str], output_key: str):
 
     @solution: [1, 1, 3, 4, 4, 5]
 
-  You can modify any of the input lists. No need to return anything.
+  You can modify any of the input lists.
 
   Args:
   * list_keys: The keys for the lists in Redis to sort.
   * output_key: The key to write the results into.
+
+  Returns str: The head of the merged linked list.
   """
   # print_all_variables()
   pass

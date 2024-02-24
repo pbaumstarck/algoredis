@@ -20,13 +20,41 @@ def _inter_variables(**kwargs):
   actual_args = []
   for key, value in kwargs.items():
     is_escaped = key[0] in ('@', '#', '%', '$', '&',)
-    # if key[0] == '*':
-    #   # It's an escape, so just add the arg literally without going through Redis.
-    #   actual_args.append(value)
     if isinstance(value, list):
       if key[0] == '!':
         # Linked list.
         actual_args.append(_create_linked_list('$' + key[1:], value))
+      elif key[0] == '^':
+        # Binary tree.
+        values = value[:]
+        v = values.pop(0)
+        head_key = '$%s-0' % key[1:]
+        red.delete(head_key)
+        red.hset(head_key, 'val', v)
+        stack = [head_key]
+        i = 1
+        while stack:
+          parent_key = stack.pop(0)
+          left_value = values.pop(0) if values else None
+          right_value = values.pop(0) if values else None
+
+          if left_value is not None:
+            left_key = '$%s-%d' % (key[1:], i)
+            i += 1
+            red.delete(left_key)
+            red.hset(left_key, 'val', left_value)
+            red.hset(parent_key, 'left', left_key)
+            stack.append(left_key)
+
+          if right_value is not None:
+            right_key = '$%s-%d' % (key[1:], i)
+            i += 1
+            red.delete(right_key)
+            red.hset(right_key, 'val', right_value)
+            red.hset(parent_key, 'right', right_key)
+            stack.append(right_key)
+
+        actual_args.append(head_key)
       elif value and isinstance(value[0], list):
         # Nested lists.
         actual_args.append([])
@@ -136,7 +164,6 @@ def run_tests(name=None, eval_fn=None, test_cases=None, return_fn=None):
     actual_args = _inter_variables(**fn_kwargs)
     return_actual = eval_fn(*actual_args)
     if return_fn:
-      print('return_actual', return_actual)
       return_actual = return_fn(return_actual)
 
     print_args = [fn_kwargs]
@@ -310,3 +337,17 @@ def run_longest_unique_substring(eval_fn):
       ({'str': 'asdf[qwerty()zxcv{}]'}, 20),
       ({'str': 'qqqqqqqqqqqqqqqqq'}, 1),
     ])
+
+def run_inorder_traversal(eval_fn):
+  return run_tests(
+    name='In-Order Traversal',
+    eval_fn=eval_fn,
+    test_cases=[
+      ({'^root': [1, 2, 3]}, [2, 1, 3]),
+      ({'^root': [1]}, [1]),
+      ({'^root': [1, 2, 3, 4, 5, 6, 7]}, [4, 2, 5, 1, 6, 3, 7]),
+      ({'^root': [1, 2, 3, None, None, 6, 7]}, [2, 1, 6, 3, 7]),
+      ({'^root': [1, 2, 3, 4, None, None, 7]}, [4, 2, 1, 3, 7]),
+      ({'^root': [1, 2, 3, None, None, 6]}, [2, 1, 6, 3]),
+    ],
+    return_fn=_get_variable)

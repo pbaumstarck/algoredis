@@ -2,7 +2,7 @@ import redis
 
 from algoredis_utils import *
 
-"""Linked list representation:
+"""Linked list node representation:
 
   1 -> 4 -> 9
 
@@ -19,10 +19,11 @@ def reverse_linked_list(head_key: str) -> str:
   """Reverse the elements of a linked list.
 
   Each node in the linked list is a key to a Redis hash map with fields "val" to
-  its value, and "next" (optionally) to the name of the next node. E.g.,
+  its value, and "next" (optionally) to the name of the next node, e.g.:
 
     red.hget('$node-0', 'val') => '1'
-    red.hreg('$node-0', 'next') => '$node-1'
+    red.hexists('$node-0', 'next') => True
+    red.hget('$node-0', 'next') => '$node-1'
 
   Reverse the order of all the nodes and return the key of the new head node.
   Modify the list in place.

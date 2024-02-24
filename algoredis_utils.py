@@ -296,3 +296,17 @@ def run_largest_island(eval_fn):
         list('000111111110000000'),
         ]}, 48),
     ])
+
+
+def run_longest_unique_substring(eval_fn):
+  return run_tests(
+    name='Longest Unique Substring',
+    eval_fn=eval_fn,
+    test_cases=[
+      ({'str': 'abcabcbb'}, 3),
+      ({'str': 'bbbbb'}, 1),
+      ({'str': 'pwwkew'}, 3),
+      ({'str': 'abcdaaaaaaaabcde'}, 5),
+      ({'str': 'asdf[qwerty()zxcv{}]'}, 20),
+      ({'str': 'qqqqqqqqqqqqqqqqq'}, 1),
+    ])

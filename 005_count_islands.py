@@ -22,7 +22,7 @@ def count_islands(row_keys: str) -> str:
 
   Returns int: The number of islands found
   """
-  print_all_variables()
+  # print_all_variables()
   return 0
   
 

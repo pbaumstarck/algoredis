@@ -4,27 +4,29 @@ import solutions
 from algoredis_utils import *
 
 
-def merge_sorted_lists(list_keys: list[str], output_key: str):
+def merge_sorted_lists(list_keys: list[str]):
   # Pointers into all the lists.
-  red.delete('@ixes')
-  red.rpush('@ixes', *([0] * len(list_keys)))
+  red.delete('@js')
+  red.rpush('@js', *([0] * len(list_keys)))
 
-  red.delete(output_key)
+  red.delete('@merged')
   while True:
     # Sorted set for the minimum head element.
     red.delete('%min_elems')
-    for i in range(red.llen('@ixes')):
-      ix = int(red.lindex('@ixes', i))
-      if ix < red.llen(list_keys[i]):
-        red.zadd('%min_elems', {i: red.lindex(list_keys[i], ix)})
+    for i in range(red.llen('@js')):
+      j = int(red.lindex('@js', i))
+      if j < red.llen(list_keys[i]):
+        red.zadd('%min_elems', {i: red.lindex(list_keys[i], j)})
 
     if not red.exists('%min_elems'):
-      return
+      return '@merged'
 
     i = int(red.zrange('%min_elems', 0, 0)[0])
-    ix = int(red.lindex('@ixes', i))
-    red.rpush(output_key, red.lindex(list_keys[i], ix))
-    red.lset('@ixes', i, ix + 1)
+    j = int(red.lindex('@js', i))
+    red.rpush('@merged', red.lindex(list_keys[i], j))
+    red.lset('@js', i, j + 1)
+
+  return '@merged'
 
 
 run_merge_sorted_lists(merge_sorted_lists)

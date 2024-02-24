@@ -32,7 +32,7 @@ def reverse_linked_list(head_key: str) -> str:
 
   Returns str: The key of the new head node in the reversed list.
   """
-  print_all_variables()
+  # print_all_variables()
   return None
 
 

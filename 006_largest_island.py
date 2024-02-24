@@ -23,7 +23,7 @@ def largest_island(row_keys: list[str]) -> int:
 
   Returns int: The size of the largest island.
   """
-  print_all_variables()
+  # print_all_variables()
   return -1
 
 

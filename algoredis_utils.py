@@ -338,6 +338,7 @@ def run_longest_unique_substring(eval_fn):
       ({'str': 'qqqqqqqqqqqqqqqqq'}, 1),
     ])
 
+
 def run_inorder_traversal(eval_fn):
   return run_tests(
     name='In-Order Traversal',
@@ -351,3 +352,17 @@ def run_inorder_traversal(eval_fn):
       ({'^root': [1, 2, 3, None, None, 6]}, [2, 1, 6, 3]),
     ],
     return_fn=_get_variable)
+
+
+def run_binary_tree_depth(eval_fn):
+  return run_tests(
+    name='Binary Tree Depth',
+    eval_fn=eval_fn,
+    test_cases=[
+      ({'^root': [1, 2, 3]}, 2),
+      ({'^root': [1]}, 1,),
+      ({'^root': [1, 2, 3, 4, 5, 6, 7]}, 3),
+      ({'^root': [1, 2, 3, None, None, 6, 7]}, 3),
+      ({'^root': [1, 2, 3, 4, None, None, 7]}, 3),
+      ({'^root': [1, 2, 3, None, None, 6]}, 3),
+    ])

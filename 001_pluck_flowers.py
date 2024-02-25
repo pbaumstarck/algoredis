@@ -21,10 +21,10 @@ def pluck_flowers(flowers_key: str) -> int:
   * flowers_key: The key for the buoquets list.
 
   Returns:
-  The maximum number of flowers you can pick.
+  The maximum number of flowers you can
   """
   # print_all_variables()
-  pass
+  return None
 
 
 run_pluck_flowers(pluck_flowers)
